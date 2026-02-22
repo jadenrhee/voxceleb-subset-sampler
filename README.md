@@ -91,3 +91,55 @@ print(counts)
 PY
 
 Expected: mostly/only '.m4a'.
+
+
+EXAMPLE INPUTS:
+
+# 1) install dependencies
+python3 -m pip install -U datasets huggingface_hub requests
+
+# 2) set your Hugging Face token (replace this)
+export HF_TOKEN=hf_REPLACE_WITH_YOUR_TOKEN
+
+# 3) build index (fast metadata-only run)
+python3 /Users/jadenrhee/Python/voxceleb_sampler.py \
+  --out_root /Users/jadenrhee/Python/vox_index_build_team \
+  --target_gb 2.0 \
+  --mode manifest \
+  --dry_run_report \
+  --hf_disable_audio_decode \
+  --hf_allow_metric_estimates \
+  --estimated_bytes_per_file 160000 \
+  --optimized_mode \
+  --optimized_min_candidates 10000 \
+  --optimized_min_speakers 1000 \
+  --optimized_speaker_buffer 300 \
+  --hf_progress_every 5000 \
+  --hf_heartbeat_seconds 10 \
+  --save_index /Users/jadenrhee/Python/vox_index/voxceleb2_wds_index_team.jsonl
+
+# 4) build actual subset from saved index (this one is looking for 2 gb, 1200 speakers) (can interchange values)
+python3 /Users/jadenrhee/Python/voxceleb_sampler.py \
+  --out_root /Users/jadenrhee/Python/vox_subset_team_2gb \
+  --target_gb 2.0 \
+  --min_speakers 1200 \
+  --max_per_speaker_seconds 60 \
+  --mode copy \
+  --hf_allow_metric_estimates \
+  --estimated_bytes_per_file 160000 \
+  --load_index /Users/jadenrhee/Python/vox_index/voxceleb2_wds_index_team.jsonl
+
+# 5) verify only audio files are in subset
+python3 - <<'PY'
+from pathlib import Path
+root=Path('/Users/jadenrhee/Python/vox_subset_team_2gb/subset')
+counts={}
+for p in root.rglob('*'):
+    if p.is_file():
+        counts[p.suffix.lower()]=counts.get(p.suffix.lower(),0)+1
+print(counts)
+PY
+
+# 6) inspect final stats
+cat /Users/jadenrhee/Python/vox_subset_team_2gb/stats.json
+
