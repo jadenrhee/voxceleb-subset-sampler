@@ -1,2 +1,2 @@
 # voxceleb-subset-sampler
-VoxCeleb is a ~1TB speaker audio dataset, which is impractical to fully download for most experiments. This project creates a smaller, reproducible subset optimized for fast speaker identification research without requiring the full dataset.
+VoxCeleb is nearly 1TB in size, which makes downloading and processing the full dataset impractical for quick experiments. This script streams the dataset and creates a smaller, reproducible subset suitable for fast speaker identification development without requiring the full download.
