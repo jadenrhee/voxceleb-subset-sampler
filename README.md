@@ -17,8 +17,10 @@ python voxceleb_sampler.py --help
 
 ## Runbook (copy/paste)
 
+## Make sure you create a huggingface account to then create a hugggingface token to use.
+
 ### 1) One-time setup
-```bash
+
 python3 -m pip install -U datasets huggingface_hub requests
 
 export HF_TOKEN=<YOUR_HF_READ_TOKEN>
